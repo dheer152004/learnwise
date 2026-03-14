@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CurioLab — Biology Virtual Laboratory</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* ── Bio-theme: green accent overrides ── */
+    :root {
+      --accent: #2e9e6e;
+      --accent-light: #e8f7f1;
+      --violet: #2e9e6e;
+      --violetD: rgba(46, 158, 110, 0.12);
+      --border2: rgba(46, 158, 110, 0.22);
+    }
+
+    /* Logo */
+    .logo-text span {
+      color: #2e9e6e;
+    }
+
+    /* Header formula pill — green border/bg */
+    .header-formula {
+      color: #2e9e6e;
+      background: #e8f7f1;
+      border-color: rgba(46, 158, 110, 0.25);
+    }
+
+    /* AI button — outlined green pill, matches Maths Studio style */
+    .ai-toggle-btn {
+      background: #e8f7f1;
+      border-color: #2e9e6e;
+      color: #2e9e6e;
+    }
+
+    .ai-toggle-btn:hover {
+      background: #2e9e6e;
+      color: #ffffff;
+    }
+
+    /* Run button */
+    .btn-run {
+      background: linear-gradient(135deg, #2e9e6e, #2ec4b6);
+    }
+
+    /* Sidebar active state */
+    .exp-btn.active {
+      border-left-color: #2e9e6e;
+      background: rgba(46, 158, 110, 0.08);
+    }
+
+    .exp-btn.active .exp-label {
+      color: #2e9e6e;
+    }
+
+    .section-head {
+      color: #2e9e6e;
+    }
+
+    /* AI side panel accent */
+    .ai-tab.active {
+      color: #2e9e6e;
+      border-bottom-color: #2e9e6e;
+    }
+
+    .ai-action-big {
+      background: #2e9e6e;
+    }
+
+    .ai-action-big:hover {
+      background: #257a56;
+    }
+
+    .ai-output-badge.cyan {
+      background: rgba(46, 158, 110, 0.12);
+      color: #2e9e6e;
+    }
+
+    /* Explain badge */
+    .explain-badge {
+      background: rgba(46, 158, 110, 0.12);
+      color: #2e9e6e;
+    }
+
+    .explain-action-btn {
+      border-color: #2e9e6e;
+      color: #2e9e6e;
+    }
+
+    .explain-action-btn:hover {
+      background: #2e9e6e;
+      color: #fff;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="app">
+
+    <!-- ── Header ── -->
+    <header class="header">
+      <a class="logo-wrap" href="#">
+        <!-- Bio icon: DNA double helix suggestion -->
+        <svg class="logo-svg-mark" viewBox="220 70 240 210" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="340" cy="170" r="108" fill="#2e9e6e" opacity="0.07" />
+          <circle cx="340" cy="170" r="90" fill="#2e9e6e" opacity="0.10" />
+          <!-- DNA helix left strand -->
+          <path d="M300 100 Q320 135 300 170 Q280 205 300 240" fill="none" stroke="#2e9e6e" stroke-width="5"
+            stroke-linecap="round" />
+          <!-- DNA helix right strand -->
+          <path d="M380 100 Q360 135 380 170 Q400 205 380 240" fill="none" stroke="#2ec4b6" stroke-width="5"
+            stroke-linecap="round" />
+          <!-- Rungs -->
+          <line x1="305" y1="118" x2="375" y2="126" stroke="#2e9e6e" stroke-width="3" stroke-linecap="round"
+            opacity="0.7" />
+          <line x1="290" y1="148" x2="370" y2="155" stroke="#2ec4b6" stroke-width="3" stroke-linecap="round"
+            opacity="0.7" />
+          <line x1="295" y1="178" x2="365" y2="172" stroke="#2e9e6e" stroke-width="3" stroke-linecap="round"
+            opacity="0.7" />
+          <line x1="308" y1="208" x2="372" y2="200" stroke="#2ec4b6" stroke-width="3" stroke-linecap="round"
+            opacity="0.7" />
+          <!-- Leaf accent -->
+          <g transform="translate(414,88)">
+            <ellipse cx="0" cy="0" rx="14" ry="22" fill="#4caf50" opacity="0.85" transform="rotate(-30)" />
+            <line x1="0" y1="-18" x2="0" y2="18" stroke="rgba(255,255,255,0.5)" stroke-width="1.5"
+              transform="rotate(-30)" />
+          </g>
+        </svg>
+        <span class="logo-text">Curio<span>Lab</span> <span
+            style="font-size:0.65em;color:#6b6b80;font-family:'DM Sans',sans-serif;">Bio</span></span>
+      </a>
+
+      <div class="header-center">
+        <span class="header-exp-name" id="simName">Biology Lab</span>
+        <span class="header-formula" id="simFormula"></span>
+        <span style="font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--ink-muted);margin-left:4px;"
+          id="simTime"></span>
+      </div>
+
+      <div class="header-right">
+        <button class="ai-toggle-btn" onclick="toggleAiPanel()">⚗ CurioLab AI</button>
+        <a href="localhost:5173" class="back-link">&#8592; Back</a>
+        <div class="status-chip">
+          <div class="pulse"></div>Lab Online
+        </div>
+      </div>
+    </header>
+
+    <div class="main">
+
+      <!-- Sidebar -->
+      <nav class="sidebar" id="sidebar"></nav>
+
+      <!-- Centre column -->
+      <div class="centre-col">
+        <div class="sim-topbar" id="simTopbar"></div>
+
+        <div class="canvas-wrap" id="canvasWrap">
+          <canvas id="simCanvas"></canvas>
+        </div>
+
+        <!-- Bottom drawer -->
+        <div class="bottom-drawer" id="bottomDrawer">
+
+          <div class="explain-panel" id="explainPanel">
+            <div class="explain-header">
+              <span class="explain-badge">&#x2713; Experiment Complete</span>
+              <span class="explain-title" id="explainTitle"></span>
+              <div class="explain-actions">
+                <button class="explain-action-btn" id="reportBtn" onclick="runInlineReport()">📋 AI Report</button>
+                <button class="explain-action-btn quiz" id="quizBtn" onclick="runInlineQuiz()">❓ AI Quiz</button>
+                <button class="explain-close" onclick="closeAllDrawers()">&#x2715;</button>
+              </div>
+            </div>
+            <div class="explain-cards" id="explainCards"></div>
+          </div>
+
+          <div class="ai-output-panel" id="aiReportPanel">
+            <div class="ai-output-inner">
+              <div class="ai-output-header">
+                <span class="ai-output-badge cyan">📋 AI Experiment Report</span>
+                <button class="explain-close"
+                  onclick="document.getElementById('aiReportPanel').style.display='none'">&#x2715;</button>
+              </div>
+              <div class="ai-report-content" id="aiReportContent"></div>
+            </div>
+          </div>
+
+          <div class="ai-output-panel" id="quizPanel" style="border-left-color:var(--warm)">
+            <div class="ai-output-inner">
+              <div class="ai-output-header">
+                <span class="ai-output-badge violet">❓ AI Quiz</span>
+                <button class="explain-close"
+                  onclick="document.getElementById('quizPanel').style.display='none'">&#x2715;</button>
+              </div>
+              <div id="quizContent"></div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Controls panel -->
+      <aside class="ctrl-panel">
+        <div>
+          <div class="panel-head">Parameters</div>
+          <div class="ctrl-block" id="controlsContent"></div>
+        </div>
+        <div>
+          <button class="btn-run" id="runBtn" onclick="toggleRun()">&#x25B6; Run Simulation</button>
+          <button class="btn-reset" id="resetBtn" onclick="resetSim()">&#x21BA; Reset</button>
+        </div>
+        <div>
+          <div class="panel-head">Live Readings</div>
+          <div class="readings" id="readings"></div>
+        </div>
+        <div class="info-box" id="infoBox">Select an experiment from the sidebar to begin.</div>
+      </aside>
+
+      <!-- AI Side Panel -->
+      <div class="ai-side-panel" id="aiSidePanel">
+        <div class="ai-panel-header">
+          <span class="ai-panel-title">⚗ CurioLab AI Guide</span>
+          <button class="explain-close" onclick="toggleAiPanel()">&#x2715;</button>
+        </div>
+        <div class="ai-tabs">
+          <button class="ai-tab active" id="tab-assistant" onclick="switchAiTab('assistant')">💬 Chat</button>
+          <button class="ai-tab" id="tab-report" onclick="switchAiTab('report')">📋 Report</button>
+          <button class="ai-tab" id="tab-quiz" onclick="switchAiTab('quiz')">❓ Quiz</button>
+        </div>
+
+        <div class="ai-tab-pane active" id="pane-assistant">
+          <div class="chat-messages" id="chatMessages"></div>
+          <div class="chat-input-row">
+            <textarea class="chat-input" id="chatInput" rows="2"
+              placeholder="Ask about the experiment, biology concepts, real-world links..."
+              onkeydown="chatKeydown(event)"></textarea>
+            <button class="chat-send-btn" id="chatSendBtn" onclick="sendChat()">&#x27A4;</button>
+          </div>
+        </div>
+
+        <div class="ai-tab-pane" id="pane-report">
+          <div class="ai-pane-info">Run a simulation first, then generate a personalised report based on your actual
+            readings.</div>
+          <button class="ai-action-big" id="panelReportBtn" onclick="runPanelReport()">📋 Generate Report</button>
+          <div class="ai-report-content scrollable" id="panelReportContent" style="margin-top:12px;"></div>
+        </div>
+
+        <div class="ai-tab-pane" id="pane-quiz">
+          <div class="ai-pane-info">Generate 3 quiz questions based on your current experiment and readings.</div>
+          <button class="ai-action-big violet" id="panelQuizBtn" onclick="runPanelQuiz()">❓ Generate Quiz</button>
+          <div class="scrollable" id="panelQuizContent" style="margin-top:12px;"></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="bio_experiments.js"></script>
+  <script src="bio_simulations.js"></script>
+  <script src="bio_app.js"></script>
+  <script src="grok.js"></script>
+  <script src="grok_panel.js"></script>
+</body>
+
+</html>

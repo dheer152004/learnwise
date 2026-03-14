@@ -1,10 +1,13 @@
-import React, { memo } from 'react';
+import React, { memo, useEffect } from 'react';
 
 const Bio = memo(function Bio() {
+  useEffect(() => {
+    window.location.href = '/src/assets/pages/courses/school/Biology/bio_index.html';
+  }, []);
+
   return (
-    <div className="page-container">
-      <h1>Biology</h1>
-      <p>Study genetics, ecosystems, and human anatomy.</p>
+    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', fontFamily: 'sans-serif' }}>
+      <h1>Loading Biology Lab...</h1>
     </div>
   );
 });

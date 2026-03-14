@@ -27,7 +27,15 @@ const School = memo(function School() {
             <button 
               className="btn-primary" 
               style={{ marginTop: '1.5rem', width: '100%', padding: '0.8rem' }}
-              onClick={() => navigate(sub.path)}
+              onClick={() => {
+                if (sub.title === 'Math') {
+                  window.open('/src/assets/pages/courses/school/Maths/maths.html', '_blank');
+                } else if (sub.title === 'Biology') {
+                  window.open('/src/assets/pages/courses/school/Biology/bio_index.html', '_blank');
+                } else {
+                  navigate(sub.path);
+                }
+              }}
             >
               Start Learning
             </button>

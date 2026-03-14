@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CurioLab — Maths Studio</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,700;1,400;1,700&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="maths-style.css">
+</head>
+
+<body>
+
+  <header class="header">
+    <a class="logo-wrap" href="index.html">
+      <svg class="logo-svg-mark" viewBox="220 70 240 210" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="340" cy="170" r="108" fill="#7c5cbf" opacity="0.07" />
+        <circle cx="340" cy="170" r="90" fill="#7c5cbf" opacity="0.10" />
+        <path d="M296 128 Q296 90 340 90 Q384 90 384 128 Q384 158 340 172 L340 194" fill="none" stroke="#7c5cbf"
+          stroke-width="22" stroke-linecap="round" stroke-linejoin="round" />
+        <circle cx="340" cy="218" r="11" fill="#7c5cbf" />
+        <g transform="translate(414,96)">
+          <path d="M0 -18 Q-14 -18 -14 -4 Q-14 6 -6 12 L-6 20 L6 20 L6 12 Q14 6 14 -4 Q14 -18 0 -18 Z" fill="#f4a261" />
+          <rect x="-6" y="20" width="12" height="4" rx="1" fill="#f4a261" />
+          <line x1="18" y1="-18" x2="24" y2="-24" stroke="#f4a261" stroke-width="2" stroke-linecap="round" />
+          <line x1="20" y1="-4" x2="27" y2="-4" stroke="#f4a261" stroke-width="2" stroke-linecap="round" />
+          <line x1="18" y1="10" x2="24" y2="16" stroke="#f4a261" stroke-width="2" stroke-linecap="round" />
+        </g>
+        <g transform="translate(268,242)">
+          <polygon points="0,0 0,28 8,22 14,34 18,32 12,20 22,20" fill="#2ec4b6" opacity="0.9" />
+        </g>
+      </svg>
+      <span class="logo-text">Curio<span>Lab</span></span>
+    </a>
+
+    <div class="header-center">
+      <span class="header-exp-name">Maths Studio</span>
+      <span class="header-formula">5 Interactive Experiments</span>
+    </div>
+
+    <div class="header-right">
+      <button class="ai-toggle-btn" onclick="toggleMathsAI()">&#x2697; CurioLab AI</button>
+      <a href="../physics/index.html" class="back-link">&#8592; Physics Lab</a>
+      <div class="status-chip">
+        <div class="pulse"></div>Lab Online
+      </div>
+    </div>
+  </header>
+
+  <div class="main">
+
+    <!-- Sidebar -->
+    <nav class="sidebar">
+      <div class="section-head">Maths Studio</div>
+
+      <button class="exp-btn active" onclick="scrollToExp('exp-grapher', this)">
+        <span class="exp-icon">∫</span>
+        <span class="exp-label">Function Grapher</span>
+        <span class="exp-tag">CALC</span>
+      </button>
+      <button class="exp-btn" onclick="scrollToExp('exp-circle', this)">
+        <span class="exp-icon">○</span>
+        <span class="exp-label">Unit Circle</span>
+        <span class="exp-tag">TRIG</span>
+      </button>
+      <button class="exp-btn" onclick="scrollToExp('exp-riemann', this)">
+        <span class="exp-icon">Σ</span>
+        <span class="exp-label">Riemann Sums</span>
+        <span class="exp-tag">CALC</span>
+      </button>
+      <button class="exp-btn" onclick="scrollToExp('exp-geo', this)">
+        <span class="exp-icon">△</span>
+        <span class="exp-label">Geometry</span>
+        <span class="exp-tag">GEO</span>
+      </button>
+      <button class="exp-btn" onclick="scrollToExp('exp-normal', this)">
+        <span class="exp-icon">⌀</span>
+        <span class="exp-label">Normal Distribution</span>
+        <span class="exp-tag">STATS</span>
+      </button>
+    </nav>
+
+    <!-- Content column -->
+    <div class="content-col" id="contentCol">
+
+      <!-- ── EXPERIMENT 1: Function Grapher ── -->
+      <div class="exp-card" id="exp-grapher">
+        <div class="exp-header">
+          <span class="exp-badge badge-calc">Calculus</span>
+          <h2 class="exp-title">Function Grapher &amp; Derivatives</h2>
+          <p class="exp-desc">Plot any function and see its derivative animated in real time. Trace slope at any point.
+          </p>
+        </div>
+        <div class="exp-body">
+          <div class="sim-canvas-wrap">
+            <canvas id="grapherCanvas" width="640" height="340"></canvas>
+          </div>
+          <div class="controls">
+            <div class="panel-head">Parameters</div>
+            <div class="ctrl-block">
+              <div class="ctrl-group">
+                <div class="ctrl-row"><span class="ctrl-name">Function</span></div>
+                <select id="graphFunc" onchange="updateGrapher()">
+                  <option value="sin">f(x) = sin(x)</option>
+                  <option value="cos">f(x) = cos(x)</option>
+                  <option value="quad">f(x) = x²</option>
+                  <option value="cubic">f(x) = x³ − 3x</option>
+                  <option value="exp">f(x) = eˣ / 5</option>
+                  <option value="tan">f(x) = tan(x)</option>
+                  <option value="log">f(x) = ln(x+4)</option>
+                  <option value="abs">f(x) = |x|</option>
+                </select>
+              </div>
+              <div class="ctrl-group">
+                <div class="ctrl-row">
+                  <span class="ctrl-name">X Position</span>
+                  <span class="ctrl-val" id="graphXVal">1.00</span>
+                </div>
+                <input type="range" id="graphX" min="-5" max="5" step="0.05" value="1" oninput="updateGrapher()">
+              </div>
+              <div class="ctrl-group">
+                <div class="ctrl-row">
+                  <span class="ctrl-name">Zoom</span>
+                  <span class="ctrl-val" id="graphZoomVal">1x</span>
+                </div>
+                <input type="range" id="graphZoom" min="0.5" max="4" step="0.1" value="1" oninput="updateGrapher()">
+              </div>
+              <div class="ctrl-group">
+                <div class="ctrl-row"><span class="ctrl-name">Show</span></div>
+                <select id="graphShow" onchange="updateGrapher()">
+                  <option value="both">Function + Derivative</option>
+                  <option value="func">Function only</option>
+                  <option value="deriv">Derivative only</option>
+                </select>
+              </div>
+            </div>
+            <div class="panel-head">Live Readings</div>
+            <div class="readings" id="graphReadings">
+              <div class="reading-row"><span class="rk">f(x)</span><span class="rv" id="graphFx">--</span></div>
+              <div class="reading-row"><span class="rk">f'(x)</span><span class="rv" id="graphDx">--</span></div>
+              <div class="reading-row"><span class="rk">Slope angle</span><span class="rv" id="graphAngle">--</span>
+              </div>
+            </div>
+            <button class="ai-exp-btn" onclick="openMathsAI('grapher')">&#x2697; Ask AI about this</button>
+          </div>
+        </div>
+        <!-- AI output zone -->
+        <div class="ai-exp-output" id="ai-grapher">
+          <div class="ai-exp-output-inner" id="ai-grapher-inner"></div>
+        </div>
+      </div>
+
+      <!-- ── EXPERIMENT 2: Unit Circle ── -->
+      <div class="exp-card" id="exp-circle">
+        <div class="exp-header">
+          <span class="exp-badge badge-trig">Trigonometry</span>
+          <h2 class="exp-title">Unit Circle &amp; Trigonometry</h2>
+          <p class="exp-desc">Rotate the angle and watch sin, cos, tan update live on the circle and wave graph.</p>
+        </div>
+        <div class="exp-body">
+          <div class="sim-canvas-wrap">
+            <canvas id="unitCircleCanvas" width="640" height="340"></canvas>
+          </div>
+          <div class="controls">
+            <div class="panel-head">Parameters</div>
+            <div class="ctrl-block">
+              <div class="ctrl-group">
+                <div class="ctrl-row">
+                  <span class="ctrl-name">Angle (degrees)</span>
+                  <span class="ctrl-val" id="circleAngleVal">45°</span>
+                </div>
+                <input type="range" id="circleAngle" min="0" max="360" value="45" oninput="updateUnitCircle()">
+              </div>
+              <div class="ctrl-group">
+                <div class="ctrl-row"><span class="ctrl-name">Mode</span></div>
+                <select id="circleMode" onchange="updateUnitCircle()">
+                  <option value="sin">Highlight sin</option>
+                  <option value="cos">Highlight cos</option>
+                  <option value="tan">Highlight tan</option>
+                  <option value="all">Show all</option>
+                </select>
+              </div>
+            </div>
+            <button class="btn-run" id="circleAnimBtn" onclick="toggleCircleAnim()">&#x25B6; Animate</button>
+            <button class="btn-reset" onclick="stopCircleAnim()">&#x25A0; Stop</button>
+            <div class="panel-head">Live Readings</div>
+            <div class="readings">
+              <div class="reading-row"><span class="rk">sin θ</span><span class="rv" id="circleSin">--</span></div>
+              <div class="reading-row"><span class="rk">cos θ</span><span class="rv" id="circleCos">--</span></div>
+              <div class="reading-row"><span class="rk">tan θ</span><span class="rv" id="circleTan">--</span></div>
+              <div class="reading-row"><span class="rk">Radians</span><span class="rv" id="circleRad">--</span></div>
+            </div>
+            <button class="ai-exp-btn" onclick="openMathsAI('circle')">&#x2697; Ask AI about this</button>
+          </div>
+        </div>
+        <div class="ai-exp-output" id="ai-circle">
+          <div class="ai-exp-output-inner" id="ai-circle-inner"></div>
+        </div>
+      </div>
+
+      <!-- ── EXPERIMENT 3: Riemann Sums ── -->
+      <div class="exp-card" id="exp-riemann">
+        <div class="exp-header">
+          <span class="exp-badge badge-calc">Calculus</span>
+          <h2 class="exp-title">Riemann Sums &amp; Integration</h2>
+          <p class="exp-desc">See how rectangles approximate definite integrals. Increase n to reach the exact area.</p>
+        </div>
+        <div class="exp-body">
+          <div class="sim-canvas-wrap">
+            <canvas id="riemannCanvas" width="640" height="340"></canvas>
+          </div>
+          <div class="controls">
+            <div class="panel-head">Parameters</div>
+            <div class="ctrl-block">
+              <div class="ctrl-group">
+                <div class="ctrl-row"><span class="ctrl-name">Function</span></div>
+                <select id="riemannFunc" onchange="updateRiemann()">
+                  <option value="sin">f(x) = sin(x) + 1</option>
+                  <option value="quad">f(x) = x² / 4</option>
+                  <option value="cubic">f(x) = x³ / 8 + 1</option>
+                  <option value="exp">f(x) = eˣ/4 + 0.5</option>
+                </select>
+              </div>
+              <div class="ctrl-group">
+                <div class="ctrl-row">
+                  <span class="ctrl-name">Rectangles (n)</span>
+                  <span class="ctrl-val" id="riemannNVal">5</span>
+                </div>
+                <input type="range" id="riemannN" min="1" max="100" value="5" oninput="updateRiemann()">
+              </div>
+              <div class="ctrl-group">
+                <div class="ctrl-row"><span class="ctrl-name">Method</span></div>
+                <select id="riemannType" onchange="updateRiemann()">
+                  <option value="left">Left Riemann Sum</option>
+                  <option value="right">Right Riemann Sum</option>
+                  <option value="mid">Midpoint Rule</option>
+                  <option value="trap">Trapezoid Rule</option>
+                </select>
+              </div>
+              <div class="ctrl-group">
+                <div class="ctrl-row"><span class="ctrl-name">a =</span><span class="ctrl-val" id="riemannAVal">0</span>
+                </div>
+                <input type="range" id="riemannA" min="-3" max="0" step="0.5" value="0" oninput="updateRiemann()">
+                <div class="ctrl-row" style="margin-top:8px"><span class="ctrl-name">b =</span><span class="ctrl-val"
+                    id="riemannBVal">3</span></div>
+                <input type="range" id="riemannB" min="1" max="5" step="0.5" value="3" oninput="updateRiemann()">
+              </div>
+            </div>
+            <div class="panel-head">Live Readings</div>
+            <div class="readings">
+              <div class="reading-row"><span class="rk">Approx. Area</span><span class="rv" id="riemannApprox">--</span>
+              </div>
+              <div class="reading-row"><span class="rk">Exact Area</span><span class="rv" id="riemannExact">--</span>
+              </div>
+              <div class="reading-row"><span class="rk">Error</span><span class="rv" id="riemannError">--</span></div>
+            </div>
+            <button class="ai-exp-btn" onclick="openMathsAI('riemann')">&#x2697; Ask AI about this</button>
+          </div>
+        </div>
+        <div class="ai-exp-output" id="ai-riemann">
+          <div class="ai-exp-output-inner" id="ai-riemann-inner"></div>
+        </div>
+      </div>
+
+      <!-- ── EXPERIMENT 4: Geometry Transformations ── -->
+      <div class="exp-card" id="exp-geo">
+        <div class="exp-header">
+          <span class="exp-badge badge-geo">Geometry</span>
+          <h2 class="exp-title">Geometry Transformations</h2>
+          <p class="exp-desc">Apply translation, rotation, reflection and scaling to shapes on the coordinate plane.</p>
+        </div>
+        <div class="exp-body">
+          <div class="sim-canvas-wrap">
+            <canvas id="geoCanvas" width="640" height="340"></canvas>
+          </div>
+          <div class="controls">
+            <div class="panel-head">Parameters</div>
+            <div class="ctrl-block">
+              <div class="ctrl-group">
+                <div class="ctrl-row"><span class="ctrl-name">Shape</span></div>
+                <select id="geoShape" onchange="updateGeo()">
+                  <option value="triangle">Triangle</option>
+                  <option value="square">Square</option>
+                  <option value="pentagon">Pentagon</option>
+                  <option value="arrow">Arrow</option>
+                  <option value="star">Star</option>
+                </select>
+              </div>
+              <div class="ctrl-group">
+                <div class="ctrl-row">
+                  <span class="ctrl-name">Rotation</span>
+                  <span class="ctrl-val" id="geoRotateVal">0°</span>
+                </div>
+                <input type="range" id="geoRotate" min="0" max="360" value="0" oninput="updateGeo()">
+              </div>
+              <div class="ctrl-group">
+                <div class="ctrl-row">
+                  <span class="ctrl-name">Scale</span>
+                  <span class="ctrl-val" id="geoScaleVal">1.0x</span>
+                </div>
+                <input type="range" id="geoScale" min="0.2" max="3" step="0.05" value="1" oninput="updateGeo()">
+              </div>
+              <div class="ctrl-group">
+                <div class="ctrl-row">
+                  <span class="ctrl-name">Translate X</span>
+                  <span class="ctrl-val" id="geoTxVal">0</span>
+                </div>
+                <input type="range" id="geoTx" min="-150" max="150" value="0" oninput="updateGeo()">
+              </div>
+              <div class="ctrl-group">
+                <div class="ctrl-row">
+                  <span class="ctrl-name">Translate Y</span>
+                  <span class="ctrl-val" id="geoTyVal">0</span>
+                </div>
+                <input type="range" id="geoTy" min="-100" max="100" value="0" oninput="updateGeo()">
+              </div>
+            </div>
+            <button class="btn-reset" onclick="resetGeo()">&#x21BA; Reset</button>
+            <div class="panel-head">Live Readings</div>
+            <div class="readings">
+              <div class="reading-row"><span class="rk">Area</span><span class="rv" id="geoArea">--</span></div>
+              <div class="reading-row"><span class="rk">Perimeter</span><span class="rv" id="geoPerim">--</span></div>
+            </div>
+            <button class="ai-exp-btn" onclick="openMathsAI('geo')">&#x2697; Ask AI about this</button>
+          </div>
+        </div>
+        <div class="ai-exp-output" id="ai-geo">
+          <div class="ai-exp-output-inner" id="ai-geo-inner"></div>
+        </div>
+      </div>
+
+      <!-- ── EXPERIMENT 5: Normal Distribution ── -->
+      <div class="exp-card" id="exp-normal">
+        <div class="exp-header">
+          <span class="exp-badge badge-stats">Statistics</span>
+          <h2 class="exp-title">Normal Distribution &amp; Probability</h2>
+          <p class="exp-desc">Shape the bell curve with mean and standard deviation. Shade probability regions.</p>
+        </div>
+        <div class="exp-body">
+          <div class="sim-canvas-wrap">
+            <canvas id="normalCanvas" width="640" height="340"></canvas>
+          </div>
+          <div class="controls">
+            <div class="panel-head">Parameters</div>
+            <div class="ctrl-block">
+              <div class="ctrl-group">
+                <div class="ctrl-row">
+                  <span class="ctrl-name">Mean (μ)</span>
+                  <span class="ctrl-val" id="normMeanVal">0.0</span>
+                </div>
+                <input type="range" id="normMean" min="-3" max="3" step="0.1" value="0" oninput="updateNormal()">
+              </div>
+              <div class="ctrl-group">
+                <div class="ctrl-row">
+                  <span class="ctrl-name">Std Dev (σ)</span>
+                  <span class="ctrl-val" id="normSdVal">1.00</span>
+                </div>
+                <input type="range" id="normSd" min="0.3" max="2.5" step="0.05" value="1" oninput="updateNormal()">
+              </div>
+              <div class="ctrl-group">
+                <div class="ctrl-row"><span class="ctrl-name">Shade Region</span></div>
+                <select id="normRegion" onchange="updateNormal()">
+                  <option value="none">None</option>
+                  <option value="1sd">Within 1σ (68.27%)</option>
+                  <option value="2sd">Within 2σ (95.45%)</option>
+                  <option value="3sd">Within 3σ (99.73%)</option>
+                  <option value="left">Left tail (x &lt; μ)</option>
+                  <option value="right">Right tail (x &gt; μ)</option>
+                </select>
+              </div>
+              <div class="ctrl-group">
+                <div class="ctrl-row"><span class="ctrl-name">Distribution</span></div>
+                <select id="normType" onchange="updateNormal()">
+                  <option value="normal">Normal</option>
+                  <option value="bimodal">Bimodal</option>
+                  <option value="skewleft">Left Skewed</option>
+                  <option value="skewright">Right Skewed</option>
+                </select>
+              </div>
+            </div>
+            <div class="panel-head">Live Readings</div>
+            <div class="readings">
+              <div class="reading-row"><span class="rk">P(μ±1σ)</span><span class="rv" id="normP1">68.27%</span></div>
+              <div class="reading-row"><span class="rk">P(μ±2σ)</span><span class="rv" id="normP2">95.45%</span></div>
+              <div class="reading-row"><span class="rk">Peak f(μ)</span><span class="rv" id="normPeak">--</span></div>
+            </div>
+            <button class="ai-exp-btn" onclick="openMathsAI('normal')">&#x2697; Ask AI about this</button>
+          </div>
+        </div>
+        <div class="ai-exp-output" id="ai-normal">
+          <div class="ai-exp-output-inner" id="ai-normal-inner"></div>
+        </div>
+      </div>
+
+    </div><!-- .content-col -->
+
+    <!-- ── AI Side Panel ── -->
+    <div class="ai-side-panel" id="mathsAiPanel">
+      <div class="ai-panel-header">
+        <span class="ai-panel-title">&#x2697; CurioLab AI</span>
+        <button class="ai-panel-close" onclick="toggleMathsAI()">&#x2715;</button>
+      </div>
+      <div class="ai-tabs">
+        <button class="ai-tab active" id="mtab-chat" onclick="switchMathsTab('chat')">&#x1F4AC; Chat</button>
+        <button class="ai-tab" id="mtab-explain" onclick="switchMathsTab('explain')">&#x1F4D6; Explain</button>
+        <button class="ai-tab" id="mtab-quiz" onclick="switchMathsTab('quiz')">&#x2753; Quiz</button>
+      </div>
+
+      <!-- Chat pane -->
+      <div class="ai-tab-pane active" id="mpane-chat">
+        <div class="chat-messages" id="mathsChatMessages"></div>
+        <div class="chat-input-row">
+          <textarea class="chat-input" id="mathsChatInput" rows="2" placeholder="Ask about any maths concept..."
+            onkeydown="mathsChatKeydown(event)"></textarea>
+          <button class="chat-send-btn" id="mathsChatSendBtn" onclick="sendMathsChat()">&#x27A4;</button>
+        </div>
+      </div>
+
+      <!-- Explain pane -->
+      <div class="ai-tab-pane" id="mpane-explain">
+        <div class="ai-pane-info">Select an experiment below, then generate a plain-English explanation of the current
+          state.</div>
+        <div class="ai-exp-select">
+          <button class="ai-exp-select-btn active" id="sel-grapher" onclick="selectMathsExp('grapher', this)">∫
+            Grapher</button>
+          <button class="ai-exp-select-btn" id="sel-circle" onclick="selectMathsExp('circle', this)">○ Circle</button>
+          <button class="ai-exp-select-btn" id="sel-riemann" onclick="selectMathsExp('riemann', this)">Σ
+            Riemann</button>
+          <button class="ai-exp-select-btn" id="sel-geo" onclick="selectMathsExp('geo', this)">△ Geo</button>
+          <button class="ai-exp-select-btn" id="sel-normal" onclick="selectMathsExp('normal', this)">⌀ Normal</button>
+        </div>
+        <button class="ai-action-big" id="mathsExplainBtn" onclick="runMathsExplain()">&#x1F4D6; Explain This</button>
+        <div class="ai-report-content scrollable" id="mathsExplainContent" style="margin-top:12px;"></div>
+      </div>
+
+      <!-- Quiz pane -->
+      <div class="ai-tab-pane" id="mpane-quiz">
+        <div class="ai-pane-info">Generate 3 quiz questions based on the selected experiment's current values.</div>
+        <div class="ai-exp-select">
+          <button class="ai-exp-select-btn active" id="qsel-grapher" onclick="selectMathsQuizExp('grapher', this)">∫
+            Grapher</button>
+          <button class="ai-exp-select-btn" id="qsel-circle" onclick="selectMathsQuizExp('circle', this)">○
+            Circle</button>
+          <button class="ai-exp-select-btn" id="qsel-riemann" onclick="selectMathsQuizExp('riemann', this)">Σ
+            Riemann</button>
+          <button class="ai-exp-select-btn" id="qsel-geo" onclick="selectMathsQuizExp('geo', this)">△ Geo</button>
+          <button class="ai-exp-select-btn" id="qsel-normal" onclick="selectMathsQuizExp('normal', this)">⌀
+            Normal</button>
+        </div>
+        <button class="ai-action-big violet" id="mathsQuizBtn" onclick="runMathsQuiz()">&#x2753; Generate Quiz</button>
+        <div class="scrollable" id="mathsQuizContent" style="margin-top:12px;"></div>
+      </div>
+    </div>
+
+  </div><!-- .main -->
+
+  <script src="maths-script.js"></script>
+  <script src="maths-ai.js"></script>
+  <script>
+    function scrollToExp(id, btn) {
+      document.querySelectorAll('.exp-btn').forEach(function (b) { b.classList.remove('active'); });
+      btn.classList.add('active');
+      document.getElementById(id).scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+    window.addEventListener('load', function () {
+      updateGrapher(); updateUnitCircle(); updateRiemann(); updateGeo(); updateNormal();
+    });
+  </script>
+</body>
+
+</html>

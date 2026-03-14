@@ -1,7 +1,7 @@
 // grok.js — AI features powered by Groq API
 // Features: 1) Lab Assistant  2) Auto Report  3) Quiz Generator
 
-const apiKey = process.env.GROQ_API_KEY;
+const apiKey  = process.env.GROQ_API_KEY;
 const GROQ_MODEL = 'llama-3.3-70b-versatile';
 const GROQ_URL = 'https://api.groq.com/openai/v1/chat/completions';
 
