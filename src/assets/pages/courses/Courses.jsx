@@ -1,31 +1,86 @@
-import React, { memo } from 'react';
+import React, { useState, memo } from 'react';
+import { useNavigate } from 'react-router-dom';
 
-const categories = [
-  { title: 'Physics', icon: '🔭', color: 'bg-primary', desc: 'Master the laws of nature and mechanics.' },
-  { title: 'Chemistry', icon: '🧪', color: 'bg-secondary', desc: 'Explore reactions, elements, and compounds.' },
-  { title: 'Math', icon: '➗', color: 'bg-accent', desc: 'From algebra to advanced calculus.' },
-  { title: 'Development', icon: '💻', color: 'bg-primary', desc: 'Web apps, mobile apps, and software engineering.' },
-  { title: 'DSA', icon: '🧠', color: 'bg-secondary', desc: 'Data structures and algorithms for interviews.' },
-  { title: 'System Design', icon: '🏗️', color: 'bg-accent', desc: 'Design scalable and robust architectures.' },
+const schoolSubjects = [
+  { icon: '⚛️', name: 'Physics', path: '/courses/physics', desc: 'Mechanics, light, electricity & more', tag: 'Class 9–12', color: '#e8f4fd', accent: '#3b82f6' },
+  { icon: '🧪', name: 'Chemistry', path: '/courses/chemistry', desc: 'Atoms, reactions, organic basics', tag: 'Class 9–12', color: '#fef3e8', accent: '#f97316' },
+  { icon: '📐', name: 'Mathematics', path: '/courses/math', desc: 'Algebra, geometry, calculus intro', tag: 'Class 9–12', color: '#e8fdf0', accent: '#22c55e' },
+  { icon: '🌱', name: 'Biology', path: '/courses/bio', desc: 'Cells, genetics, ecosystems', tag: 'Class 9–12', color: '#f0fde8', accent: '#84cc16' },
+  { icon: '💻', name: 'Computer Science', path: '/courses/cs', desc: 'Intro to programming & IT', tag: 'Class 9–12', color: '#f3e8fd', accent: '#8b5cf6' },
 ];
 
-const Courses = memo(function Courses() {
+const Courses = memo(function Courses({ initialTab = null }) {
+  const [tab, setTab] = useState(initialTab);
+  const navigate = useNavigate();
+
+  if (tab === null) {
+    return (
+      <div className="courses-choose-page">
+        <div className="choose-header">
+          <button className="back-link" onClick={() => navigate(-1)}>← Back</button>
+          <div className="section-label">COURSES</div>
+          <h1>Where are you studying?</h1>
+          <p>Pick your level and we'll show you the right subjects.</p>
+        </div>
+
+        <div className="choose-cards">
+          <button className="choose-card school-card" onClick={() => { setTab('school'); navigate('/courses/school'); }}>
+            <div className="choose-card-icon">🏫</div>
+            <h2>School</h2>
+            <p>Classes 9–12 · CBSE / ICSE / State Board</p>
+            <ul>
+              <li>Physics</li>
+              <li>Chemistry</li>
+              <li>Mathematics</li>
+              <li>Biology & more</li>
+            </ul>
+            <span className="choose-cta">Explore School →</span>
+          </button>
+
+          <button className="choose-card college-card" onClick={() => { window.location.href = 'http://localhost:3000/'; }}>
+            <div className="choose-card-icon">🎓</div>
+            <h2>College</h2>
+            <p>B.Sc · B.Tech · BCA · BA · B.Com</p>
+            <ul>
+              <li>Data Structures</li>
+              <li>Machine Learning</li>
+              <li>Calculus & LinAlg</li>
+              <li>Organic Chem & more</li>
+            </ul>
+            <span className="choose-cta">Explore College →</span>
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  const subjects = schoolSubjects;
+  const label = 'School (Class 9–12)';
+
   return (
-    <div className="courses-page">
-      <div className="section-header">
-        <h2>Explore Our Courses</h2>
-        <p>Choose a category below to start learning.</p>
+    <div className="courses-list-page">
+      <div className="courses-list-header">
+        <button className="back-link" onClick={() => { setTab(null); navigate('/courses'); }}>← Back</button>
+        <div className="section-label">{label.toUpperCase()}</div>
+        <h1>Pick a subject</h1>
+        <p>Aligned with CBSE / ICSE curriculum.</p>
+
+        <div className="tab-toggle">
+          <button className="active">🏫 School</button>
+          <button onClick={() => { window.location.href = 'http://localhost:3000/'; }}>🎓 College</button>
+        </div>
       </div>
 
-      <div className="courses-grid">
-        {categories.map((cat, idx) => (
-          <div key={idx} className="course-card">
-            <div className={`feature-icon ${cat.color}`}>{cat.icon}</div>
-            <h3>{cat.title}</h3>
-            <p>{cat.desc}</p>
-            <button className="btn-secondary" style={{ marginTop: '1.5rem', width: '100%', padding: '0.8rem' }}>
-              View Path
-            </button>
+      <div className="subjects-grid">
+        {subjects.map(s => (
+          <div className="subject-card" key={s.name} style={{ '--card-accent': s.accent, '--card-bg': s.color }}>
+            <div className="subject-card-icon">{s.icon}</div>
+            <div className="subject-card-body">
+              <span className="subject-tag">{s.tag}</span>
+              <h3>{s.name}</h3>
+              <p>{s.desc}</p>
+            </div>
+            <button className="subject-btn" onClick={() => navigate(s.path)}>Start →</button>
           </div>
         ))}
       </div>

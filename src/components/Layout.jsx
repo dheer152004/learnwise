@@ -5,7 +5,8 @@ import Footer from './Footer';
 
 export default function Layout() {
   return (
-    <div className="landing-page">
+    // FIXED: removed className="landing-page" — that class had old conflicting styles
+    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
       <Navbar />
       <main style={{ flex: 1 }}>
         <Outlet />

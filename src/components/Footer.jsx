@@ -6,10 +6,10 @@ const Footer = memo(function Footer() {
     <footer className="footer">
       <div className="footer-content">
         <div className="footer-brand">
-          <Link to="/" className="logo">learno.</Link>
-          <p>Empowering the world to learn seamlessly.</p>
+          <Link to="/" className="logo">CurioLab</Link>
+          <p>Einstein Didn't Have Wi-Fi. You Do.</p>
         </div>
-        
+
         <div className="footer-links">
           <div className="footer-column">
             <h4>Product</h4>

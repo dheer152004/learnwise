@@ -1,14 +1,20 @@
 import React, { Suspense, lazy } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import './index.css';
+import './App.css';  // ← FIXED: was './index.css'
 
 import Layout from './components/Layout';
 
-// Lazy loaded pages
 const Home = lazy(() => import('./assets/pages/Home'));
 const Courses = lazy(() => import('./assets/pages/courses/Courses'));
 
-// Generated Footer Pages
+const Physics = lazy(() => import('./assets/pages/courses/school/Physics'));
+const Chemistry = lazy(() => import('./assets/pages/courses/school/Chemistry'));
+const Math = lazy(() => import('./assets/pages/courses/school/Math'));
+const Bio = lazy(() => import('./assets/pages/courses/school/Bio'));
+
+const SchoolPageWrapper = () => <Courses initialTab="school" />;
+const CollegePageWrapper = () => <Courses initialTab="college" />;
+
 const Features = lazy(() => import('./assets/pages/Features'));
 const Pricing = lazy(() => import('./assets/pages/Pricing'));
 const Security = lazy(() => import('./assets/pages/Security'));
@@ -37,6 +43,12 @@ function App() {
           <Route path="/" element={<Layout />}>
             <Route index element={<Home />} />
             <Route path="courses" element={<Courses />} />
+            <Route path="courses/school" element={<SchoolPageWrapper />} />
+            <Route path="courses/college" element={<CollegePageWrapper />} />
+            <Route path="courses/physics" element={<Physics />} />
+            <Route path="courses/chemistry" element={<Chemistry />} />
+            <Route path="courses/math" element={<Math />} />
+            <Route path="courses/bio" element={<Bio />} />
             <Route path="features" element={<Features />} />
             <Route path="pricing" element={<Pricing />} />
             <Route path="security" element={<Security />} />
@@ -46,12 +58,10 @@ function App() {
             <Route path="helpcenter" element={<HelpCenter />} />
             <Route path="documentation" element={<Documentation />} />
             <Route path="api" element={<API />} />
-            
             <Route path="about" element={<About />} />
             <Route path="careers" element={<Careers />} />
             <Route path="press" element={<Press />} />
             <Route path="contact" element={<Contact />} />
-            
             <Route path="privacy" element={<Privacy />} />
             <Route path="terms" element={<Terms />} />
             <Route path="cookies" element={<Cookies />} />

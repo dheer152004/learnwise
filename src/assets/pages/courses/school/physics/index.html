@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CurioLab — Physics Virtual Laboratory</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <div class="app">
+
+    <!-- ── Header ── -->
+    <header class="header">
+
+      <!-- CurioLab Logo (inline SVG scaled to header) -->
+      <a class="logo-wrap" href="#">
+        <!-- Just the icon portion of the SVG (question mark + bulb + cursor) -->
+        <svg class="logo-svg-mark" viewBox="220 70 240 210" xmlns="http://www.w3.org/2000/svg">
+          <!-- Soft circles behind ? -->
+          <circle cx="340" cy="170" r="108" fill="#7c5cbf" opacity="0.07" />
+          <circle cx="340" cy="170" r="90" fill="#7c5cbf" opacity="0.10" />
+          <!-- ? arc -->
+          <path d="M296 128 Q296 90 340 90 Q384 90 384 128 Q384 158 340 172 L340 194" fill="none" stroke="#7c5cbf"
+            stroke-width="22" stroke-linecap="round" stroke-linejoin="round" />
+          <!-- ? dot -->
+          <circle cx="340" cy="218" r="11" fill="#7c5cbf" />
+          <!-- Lightbulb top-right -->
+          <g transform="translate(414,96)">
+            <path d="M0 -18 Q-14 -18 -14 -4 Q-14 6 -6 12 L-6 20 L6 20 L6 12 Q14 6 14 -4 Q14 -18 0 -18 Z"
+              fill="#f4a261" />
+            <rect x="-6" y="20" width="12" height="4" rx="1" fill="#f4a261" />
+            <line x1="18" y1="-18" x2="24" y2="-24" stroke="#f4a261" stroke-width="2" stroke-linecap="round" />
+            <line x1="20" y1="-4" x2="27" y2="-4" stroke="#f4a261" stroke-width="2" stroke-linecap="round" />
+            <line x1="18" y1="10" x2="24" y2="16" stroke="#f4a261" stroke-width="2" stroke-linecap="round" />
+          </g>
+          <!-- Cursor bottom-left -->
+          <g transform="translate(268,242)">
+            <polygon points="0,0 0,28 8,22 14,34 18,32 12,20 22,20" fill="#2ec4b6" opacity="0.9" />
+          </g>
+        </svg>
+        <span class="logo-text">Curio<span>Lab</span></span>
+      </a>
+
+      <!-- Centre: current experiment name + formula -->
+      <div class="header-center">
+        <span class="header-exp-name" id="simName">Physics Lab</span>
+        <span class="header-formula" id="simFormula"></span>
+        <span style="font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--ink-muted);margin-left:4px;"
+          id="simTime"></span>
+      </div>
+
+      <div class="header-right">
+        <button class="ai-toggle-btn" onclick="toggleAiPanel()">&#x2697; CurioLab AI</button>
+        <div class="status-chip">
+          <div class="pulse"></div>Lab Online
+        </div>
+      </div>
+    </header>
+
+    <div class="main">
+
+      <!-- Sidebar -->
+      <nav class="sidebar" id="sidebar"></nav>
+
+      <!-- Centre column -->
+      <div class="centre-col">
+        <!-- hidden topbar — info moved to header -->
+        <div class="sim-topbar" id="simTopbar"></div>
+
+        <div class="canvas-wrap" id="canvasWrap">
+          <canvas id="simCanvas"></canvas>
+        </div>
+
+        <!-- Bottom drawer: explanation + AI outputs -->
+        <div class="bottom-drawer" id="bottomDrawer">
+
+          <!-- Explanation cards -->
+          <div class="explain-panel" id="explainPanel">
+            <div class="explain-header">
+              <span class="explain-badge">&#x2713; Experiment Complete</span>
+              <span class="explain-title" id="explainTitle"></span>
+              <div class="explain-actions">
+                <button class="explain-action-btn" id="reportBtn" onclick="runInlineReport()">&#x1F4CB; AI
+                  Report</button>
+                <button class="explain-action-btn quiz" id="quizBtn" onclick="runInlineQuiz()">&#x2753; AI Quiz</button>
+                <button class="explain-close" onclick="closeAllDrawers()">&#x2715;</button>
+              </div>
+            </div>
+            <div class="explain-cards" id="explainCards"></div>
+          </div>
+
+          <!-- AI Report output -->
+          <div class="ai-output-panel" id="aiReportPanel">
+            <div class="ai-output-inner">
+              <div class="ai-output-header">
+                <span class="ai-output-badge cyan">&#x1F4CB; AI Experiment Report</span>
+                <button class="explain-close"
+                  onclick="document.getElementById('aiReportPanel').style.display='none'">&#x2715;</button>
+              </div>
+              <div class="ai-report-content" id="aiReportContent"></div>
+            </div>
+          </div>
+
+          <!-- AI Quiz output -->
+          <div class="ai-output-panel" id="quizPanel" style="border-left-color:var(--warm)">
+            <div class="ai-output-inner">
+              <div class="ai-output-header">
+                <span class="ai-output-badge violet">&#x2753; AI Quiz</span>
+                <button class="explain-close"
+                  onclick="document.getElementById('quizPanel').style.display='none'">&#x2715;</button>
+              </div>
+              <div id="quizContent"></div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Controls panel -->
+      <aside class="ctrl-panel">
+        <div>
+          <div class="panel-head">Parameters</div>
+          <div class="ctrl-block" id="controlsContent"></div>
+        </div>
+        <div>
+          <button class="btn-run" id="runBtn" onclick="toggleRun()">&#x25B6; Run Simulation</button>
+          <button class="btn-reset" id="resetBtn" onclick="resetSim()">&#x21BA; Reset</button>
+        </div>
+        <div>
+          <div class="panel-head">Live Readings</div>
+          <div class="readings" id="readings"></div>
+        </div>
+        <div class="info-box" id="infoBox">Select an experiment from the sidebar to begin.</div>
+      </aside>
+
+      <!-- AI Side Panel -->
+      <div class="ai-side-panel" id="aiSidePanel">
+        <div class="ai-panel-header">
+          <span class="ai-panel-title">&#x2697; CurioLab AI Guide</span>
+          <button class="explain-close" onclick="toggleAiPanel()">&#x2715;</button>
+        </div>
+        <div class="ai-tabs">
+          <button class="ai-tab active" id="tab-assistant" onclick="switchAiTab('assistant')">&#x1F4AC; Chat</button>
+          <button class="ai-tab" id="tab-report" onclick="switchAiTab('report')">&#x1F4CB; Report</button>
+          <button class="ai-tab" id="tab-quiz" onclick="switchAiTab('quiz')">&#x2753; Quiz</button>
+        </div>
+
+        <!-- Chat -->
+        <div class="ai-tab-pane active" id="pane-assistant">
+          <div class="chat-messages" id="chatMessages"></div>
+          <div class="chat-input-row">
+            <textarea class="chat-input" id="chatInput" rows="2" placeholder="Ask anything about the experiment..."
+              onkeydown="chatKeydown(event)"></textarea>
+            <button class="chat-send-btn" id="chatSendBtn" onclick="sendChat()">&#x27A4;</button>
+          </div>
+        </div>
+
+        <!-- Report -->
+        <div class="ai-tab-pane" id="pane-report">
+          <div class="ai-pane-info">Run a simulation first, then generate a personalised report based on your actual
+            readings.</div>
+          <button class="ai-action-big" id="panelReportBtn" onclick="runPanelReport()">&#x1F4CB; Generate
+            Report</button>
+          <div class="ai-report-content scrollable" id="panelReportContent" style="margin-top:12px;"></div>
+        </div>
+
+        <!-- Quiz -->
+        <div class="ai-tab-pane" id="pane-quiz">
+          <div class="ai-pane-info">Generate 3 quiz questions based on your current experiment and readings.</div>
+          <button class="ai-action-big violet" id="panelQuizBtn" onclick="runPanelQuiz()">&#x2753; Generate
+            Quiz</button>
+          <div class="scrollable" id="panelQuizContent" style="margin-top:12px;"></div>
+        </div>
+      </div>
+
+    </div><!-- .main -->
+  </div><!-- .app -->
+
+  <script src="experiments.js"></script>
+  <script src="simulations.js"></script>
+  <script src="app.js"></script>
+  <script src="grok.js"></script>
+  <script src="grok_panel.js"></script>
+</body>
+
+</html>
