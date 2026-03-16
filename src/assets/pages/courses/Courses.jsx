@@ -6,7 +6,7 @@ const schoolSubjects = [
   { icon: '🧪', name: 'Chemistry', path: '/courses/chemistry', externalUrl: 'https://navneetsingh123ac.github.io/virtual-lab-simulator/', desc: 'Atoms, reactions, organic basics', tag: 'Class 9–12', color: '#fef3e8', accent: '#f97316' },
   { icon: '📐', name: 'Mathematics', path: '/courses/math', externalUrl: '/src/assets/pages/courses/school/Maths/maths.html', desc: 'Algebra, geometry, calculus intro', tag: 'Class 9–12', color: '#e8fdf0', accent: '#22c55e' },
   { icon: '🌱', name: 'Biology', path: '/courses/bio', externalUrl: '/src/assets/pages/courses/school/Biology/bio_index.html', desc: 'Cells, genetics, ecosystems', tag: 'Class 9–12', color: '#f0fde8', accent: '#84cc16' },
-  { icon: '💻', name: 'Computer Science', path: '/courses/cs', desc: 'Intro to programming & IT', tag: 'Class 9–12', color: '#f3e8fd', accent: '#8b5cf6' },
+  // { icon: '💻', name: 'Computer Science', path: '/courses/cs', desc: 'Intro to programming & IT', tag: 'Class 9–12', color: '#f3e8fd', accent: '#8b5cf6' },
 ];
 
 const Courses = memo(function Courses({ initialTab = null }) {
